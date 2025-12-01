@@ -1,0 +1,6 @@
+section#cookie-editor form[method="post"] select.changeFormMethod ~ p.get {
+  display: none;
+}
+section#cookie-editor form[method="get"] select.changeFormMethod ~ p.post {
+  display: none;
+}
