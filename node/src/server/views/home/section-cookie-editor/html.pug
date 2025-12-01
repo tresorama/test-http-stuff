@@ -1,0 +1,66 @@
+mixin sectionCookieEditor()
+  section#cookie-editor.section
+    h2 Cookie Editor
+    div.grid
+      div.formDocumentSet.block
+        h3 Form Document
+        +theFormDocument
+        p.text-muted-foreground Result of this Form loads in a new page
+      div.formfetchSet.block
+        h3 Form Fetch
+        +theFormFetch
+        div.result
+      div.fetchCheck.block
+        h3 Check Cookie Presence 
+        p Check which cookie are sent to the server
+        button Check Presence (Fetch)
+        div.result
+  +injectStyleAndScript
+
+
+mixin theFormDocument
+  form(action="EMPTY", method="get")
+    +theFormMethodSelector
+    +theFormSharedFields
+    button(type="submit") Set Cookie (Document)
+
+mixin theFormFetch
+  form(action="EMPTY", method="get")
+    +theFormMethodSelector
+    +theFormSharedFields
+    button(type="submit") Set Cookie (Fetch)
+
+mixin theFormMethodSelector
+  div.form-field
+    label(for="change-form-method") Form Method
+    select.changeFormMethod(id="change-form-method")
+      option(value="get") GET
+      option(value="post") POST
+    p.get If GET data is sent with URL query params.
+    p.post If POST data is sent as multipart form data
+
+mixin theFormSharedFields
+  div.form-field
+    label(for="name") name *
+    input(type="text", name="name", id="name")
+  div.form-field
+    label(for="domain") domain
+    input(type="text", name="domain", id="domain")
+  div.form-field
+    label(for="httpOnly") httpOnly
+    input(type="checkbox", name="httpOnly", id="httpOnly", checked="true")
+  div.form-field
+    label(for="sameSite") sameSite
+    select(name="sameSite", id="sameSite")
+      option(value="")
+      option(value="none") None
+      option(value="lax") Lax
+      option(value="strict") Strict
+
+mixin injectStyleAndScript()
+  <style> 
+    include style.css 
+  </style>
+  <script>
+    include ./script.js
+  </script>
