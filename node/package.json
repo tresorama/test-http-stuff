@@ -16,6 +16,7 @@
   "author": "Jacopo Marrone <@tresorama> (https://github.com/tresorama)",
   "license": "MIT",
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.51.1",
     "@sefinek/random-emoji": "^2.1.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
