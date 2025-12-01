@@ -2,10 +2,10 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import './components/ds/tw.css';
-import { App } from './App';
+import { TanstackRouterProvider } from './lib/tanstack/router/router.provider';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <TanstackRouterProvider />
   </StrictMode>,
 );
