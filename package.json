@@ -1,0 +1,8 @@
+{
+  "name": "root",
+  "private": true,
+  "engines": {
+    "node": "22.x",
+    "pnpm": ">=10.0.0"
+  }
+}
