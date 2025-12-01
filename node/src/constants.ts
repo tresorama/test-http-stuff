@@ -1,22 +1,23 @@
 import z from "zod";
 
+const schemaEmptyStringToUndefined = z
+  .string()
+  .optional()
+  .transform(v => {
+    if (v === "") return undefined;
+    return v;
+  });
 
 const ENV_VARS = z.object({
   // env
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   // logging
-  MIN_LOG_LEVEL: z.enum([
-    "error",
-    "info",
-    "debug",
-  ]).default("info"),
-  // api server
+  MIN_LOG_LEVEL: schemaEmptyStringToUndefined.pipe(
+    z.enum(["error", "info", "debug"]).default("info")
+  ),
+  // app
   PORT: z.coerce.number(),
-}).parse({
-  NODE_ENV: process.env.NODE_ENV,
-  MIN_LOG_LEVEL: 'debug',
-  PORT: 9000,
-});
+}).parse(process.env);
 
 export const CONSTANTS = {
   // env
