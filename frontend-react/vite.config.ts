@@ -48,5 +48,8 @@ export default defineConfig(async ({ mode }) => {
         },
       }),
     ],
+    server: {
+      allowedHosts: envVars.BUILD_ONLY__VITE_ALLOWED_HOSTS,
+    }
   };
 });
