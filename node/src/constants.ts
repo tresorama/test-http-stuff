@@ -17,6 +17,7 @@ const ENV_VARS = z.object({
   ),
   // app
   PORT: z.coerce.number(),
+  SERVER_BASE_URL: z.string().min(1),
 }).parse(process.env);
 
 export const CONSTANTS = {
@@ -27,6 +28,7 @@ export const CONSTANTS = {
   MIN_LOG_LEVEL: ENV_VARS.MIN_LOG_LEVEL,
   // api server
   PORT: ENV_VARS.PORT,
+  SERVER_BASE_URL: ENV_VARS.SERVER_BASE_URL,
 };
 
 if (CONSTANTS.IS_DEVELOPMENT) {
