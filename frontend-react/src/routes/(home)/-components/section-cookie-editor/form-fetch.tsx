@@ -1,7 +1,8 @@
 import { useState } from "react";
+import z from "zod";
 
 import { UIAlert, UIDebugJson, UIFormField, UIFormFieldHelperText, UIFormLabel, UIInput, UISelect } from "./ui";
-import z from "zod";
+import { sleep } from "@/lib/utils/sleep";
 
 const BACKEND_SERVER_BASE_URL = `http://localhost:9000`;
 const API_ENDPOINT = `${BACKEND_SERVER_BASE_URL}/cookie-editor/set`;
@@ -20,10 +21,10 @@ const FORM_FIELDS = {
 } as const;
 
 type Result = (
-  | { status: 'idle'; }
-  | { status: 'loading'; }
+  | { fetchStatus: 'idle'; }
+  | { fetchStatus: 'loading'; }
   | {
-    status: 'success' | 'error',
+    fetchStatus: 'success' | 'error',
     errorCode?: string | null,
     [k: string]: unknown;
   }
@@ -35,11 +36,18 @@ export function FormFetch() {
 
   const handleFormSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     try {
-      setResultJson({ status: 'loading' });
+
+      // prevent default form submit behavior
       e.preventDefault();
 
+      // set pending state
+      setResultJson({ fetchStatus: 'loading' });
+
+      // get form data
       const formData = new FormData(e.currentTarget);
 
+      // do fetch
+      await sleep(400);
       let fetchPromise: Promise<Response>;
       if (formMethod === 'get') {
         const url = new URL(API_ENDPOINT);
@@ -54,27 +62,34 @@ export function FormFetch() {
           body: formData,
         });
       }
-      const sleep = (timeInMs: number) => new Promise(res => setTimeout(res, timeInMs));
-      await sleep(400);
       const response = await fetchPromise;
 
+      // validate response
       const json = await response.json();
       const jsonValidated = z.object({
         status: z.literal(['error']).optional(),
       }).safeParse(json);
       console.log({ response, jsonValidated, json });
+
+      // if invalid response -> show error
       if (!jsonValidated.success) {
         setResultJson({
-          status: 'error',
+          fetchStatus: 'success',
           errorCode: 'INVALID_RESPONSE_PARSE',
+          response: {
+            ...json,
+          }
         });
         return;
       }
 
+      // if valid response -> show data (can be error or success)
       setResultJson({
-        statusCode: response.status,
-        status: jsonValidated.data.status === 'error' ? 'error' : 'success',
-        ...json,
+        fetchStatus: 'success',
+        fetchStatusCode: response.status,
+        response: {
+          ...json,
+        }
       });
 
     } catch (error) {
@@ -84,9 +99,9 @@ export function FormFetch() {
         track: error instanceof Error ? error.stack : 'Unknown Error',
       };
       setResultJson({
-        status: 'error',
+        fetchStatus: 'error',
         errorCode: 'UNEXPECTED_ERROR',
-        json,
+        ...json,
       });
     }
 
@@ -141,7 +156,7 @@ export function FormFetch() {
       </form>
 
       {resultJson && (
-        <UIAlert status={resultJson.status}>
+        <UIAlert status={resultJson.fetchStatus}>
           <UIDebugJson data={resultJson} />
         </UIAlert>
       )}

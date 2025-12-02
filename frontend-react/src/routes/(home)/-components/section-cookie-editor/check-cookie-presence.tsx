@@ -1,16 +1,17 @@
 import { useState } from "react";
+import z from "zod";
 
 import { UIAlert, UIDebugJson } from "./ui";
-import z from "zod";
+import { sleep } from "@/lib/utils/sleep";
 
 const BACKEND_SERVER_BASE_URL = `http://localhost:9000`;
 const API_ENDPOINT = `${BACKEND_SERVER_BASE_URL}/cookie-editor/check`;
 
 type Result = (
-  | { status: 'idle'; }
-  | { status: 'loading'; }
+  | { fetchStatus: 'idle'; }
+  | { fetchStatus: 'loading'; }
   | {
-    status: 'success' | 'error',
+    fetchStatus: 'success' | 'error',
     errorCode?: string | null,
     [k: string]: unknown;
   }
@@ -22,38 +23,49 @@ export function CheckCookiePresence() {
 
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async () => {
     try {
-      setResultJson({ status: 'loading' });
+      // set pending state
+      setResultJson({ fetchStatus: 'loading' });
 
-      const sleep = (timeInMs: number) => new Promise(res => setTimeout(res, timeInMs));
+      // do fetch (with a delay to simulate a real-world situation)
       await sleep(400);
       const response = await fetch(API_ENDPOINT);
-      const json = await response.json();
 
+      // validate response
+      const json = await response.json();
       const jsonValidated = z.object({
         status: z.literal('error').optional(),
       }).safeParse(json);
+
+      // if invalid response -> show error
       if (!jsonValidated.success) {
         setResultJson({
-          status: 'error',
+          fetchStatus: 'success',
+          fetchStatusCode: response.status,
           errorCode: 'INVALID_RESPONSE',
-          ...json,
+          response: {
+            ...json,
+          }
         });
         return;
       }
 
+      // if valid response -> show data (can be error or success)
       setResultJson({
-        status: jsonValidated.data.status === 'error' ? 'error' : 'success',
-        ...json,
+        fetchStatus: 'success',
+        fetchStatusCode: response.status,
+        response: json
       });
 
     } catch (error) {
+
+      // if unexpected error or failed fetch communication -> show error
       const json = {
         name: error instanceof Error ? error.message : 'Unknown Error',
         message: error instanceof Error ? error.message : 'Unknown Error',
         stack: error instanceof Error ? error.stack : 'Unknown Error',
       };
       setResultJson({
-        status: 'error',
+        fetchStatus: 'error',
         errorCode: 'UNEXPECTED_ERROR',
         ...json,
       });
@@ -69,7 +81,7 @@ export function CheckCookiePresence() {
         Check Cookie Presence
       </button>
       {resultJson && (
-        <UIAlert status={'status' in resultJson ? resultJson.status : 'idle'}>
+        <UIAlert status={resultJson.fetchStatus}>
           <UIDebugJson data={resultJson} />
         </UIAlert>
       )}
