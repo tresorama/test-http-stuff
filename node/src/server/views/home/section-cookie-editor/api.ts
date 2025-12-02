@@ -96,9 +96,12 @@ const schemaSetInput = z.object({
   domain: schemaHtmlInput.typeText.pipe(
     z.string().optional()
   ),
+  secure: schemaHtmlInput.typeCheckbox,
+  partitioned: schemaHtmlInput.typeCheckbox,
 });
 
 function setCookieBasedOnRequestData(res: Response, bodyData: z.infer<typeof schemaSetInput>) {
+
   const cookieData: CookieData = {
     name: bodyData.name,
     value: 'FIXED_VALUE',
@@ -106,6 +109,8 @@ function setCookieBasedOnRequestData(res: Response, bodyData: z.infer<typeof sch
     httpOnly: bodyData.httpOnly ?? undefined,
     sameSite: bodyData.sameSite ?? undefined,
     domain: bodyData.domain ?? undefined,
+    secure: bodyData.secure ?? false,
+    partitioned: bodyData.partitioned ?? false,
   };
 
   res.cookie(cookieData.name, cookieData.value, cookieData);

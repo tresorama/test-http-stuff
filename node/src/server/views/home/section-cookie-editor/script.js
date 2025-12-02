@@ -112,7 +112,7 @@
 
     nodes.button.addEventListener('click', async () => {
       try {
-        const result = await fetch(API_ENDPOINTS.fetchCheck);
+        const result = await fetch(API_ENDPOINTS.fetchCheck, { credentials: 'include' });
         const json = await result.json();
         nodes.result.innerHTML = JSON.stringify(json, null, 2);
       } catch (error) {

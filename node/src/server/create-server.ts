@@ -1,11 +1,14 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import express from "express";
+import express, { type ErrorRequestHandler, type RequestHandler } from "express";
 import cookieParser from 'cookie-parser';
 import multer from 'multer';
+import cors from 'cors';
 
+import { middlewareRequestLogger } from './middleware/request-logger.';
 import { homePage_addRoutes } from './views/home/routes';
 
+import { CONSTANTS } from '@/constants';
 import { createLogger } from "@/utils/logger";
 import type { AddRoutesFn } from './types/add-route';
 
@@ -46,12 +49,29 @@ export async function createServer(options: CreateApiServerOptions) {
   expressApp.use(multer().any());
   apiLogger.info('Adding request components parser... ✅');
 
-  // 2. mount endpoints
+  // 3. Add middlewares
+  apiLogger.info('Adding middlewares...');
+  // cors
+  expressApp.use(cors({
+    // set Access-Control-Allow-Origin to array of origins
+    origin: [
+      CONSTANTS.SERVER_BASE_URL,
+      ...CONSTANTS.SERVER_CORS_ALLOWED_CLIENTS_ORIGINS,
+    ],
+    // set Access-Control-Allow-Credentials to true
+    credentials: true,
+  }));
+  // request logger
+  expressApp.use(middlewareRequestLogger);
+  apiLogger.info('Adding middlewares... ✅');
+
+  // 4. mount endpoints
   apiLogger.info('Mount routes...');
   addEndpoints({ app: expressApp, logger: apiLogger });
+  addErrorEndpoints({ app: expressApp, logger: apiLogger });
   apiLogger.info('Mount routes... ✅');
 
-  // 3. launch server
+  // 5. launch server
   apiLogger.info('Launching server...');
   expressApp.listen(options.port, () => {
     apiLogger.info(`Server "${options.name}" running on ${options.baseUrl}`);
@@ -64,4 +84,25 @@ export async function createServer(options: CreateApiServerOptions) {
 
 const addEndpoints: AddRoutesFn = ({ app, logger }) => {
   homePage_addRoutes({ app, logger });
+};
+
+const addErrorEndpoints: AddRoutesFn = ({ app, logger }) => {
+  const notFoundThrower: RequestHandler = (req, res, next) => {
+    const error = new Error(`Not Found - ${req.originalUrl}`);
+    res.status(404);
+    next(error);
+  };
+
+  const globalErrorCatcher: ErrorRequestHandler = (err, req, res, next) => {
+    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    res
+      .status(statusCode)
+      .json({
+        message: err.message,
+        stack: err.stack,
+      });
+  };
+
+  app.use(notFoundThrower);
+  app.use(globalErrorCatcher);
 };
