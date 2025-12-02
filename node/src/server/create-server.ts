@@ -1,6 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import express from "express";
+import express, { type ErrorRequestHandler, type RequestHandler } from "express";
 import cookieParser from 'cookie-parser';
 import multer from 'multer';
 import cors from 'cors';
@@ -53,6 +53,7 @@ export async function createServer(options: CreateApiServerOptions) {
   // 4. mount endpoints
   apiLogger.info('Mount routes...');
   addEndpoints({ app: expressApp, logger: apiLogger });
+  addErrorEndpoints({ app: expressApp, logger: apiLogger });
   apiLogger.info('Mount routes... ✅');
 
   // 5. launch server
@@ -68,4 +69,25 @@ export async function createServer(options: CreateApiServerOptions) {
 
 const addEndpoints: AddRoutesFn = ({ app, logger }) => {
   homePage_addRoutes({ app, logger });
+};
+
+const addErrorEndpoints: AddRoutesFn = ({ app, logger }) => {
+  const notFoundThrower: RequestHandler = (req, res, next) => {
+    const error = new Error(`Not Found - ${req.originalUrl}`);
+    res.status(404);
+    next(error);
+  };
+
+  const globalErrorCatcher: ErrorRequestHandler = (err, req, res, next) => {
+    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    res
+      .status(statusCode)
+      .json({
+        message: err.message,
+        stack: err.stack,
+      });
+  };
+
+  app.use(notFoundThrower);
+  app.use(globalErrorCatcher);
 };
