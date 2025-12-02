@@ -7,6 +7,7 @@ const mainLogger = createLogger('main');
 (async function main() {
   try {
     mainLogger.info('Starting!');
+    mainLogger.debug('Testing if debug level is printable');
     await run();
   } catch (error) {
     mainLogger.error('Error! Main App Crashed', error);
