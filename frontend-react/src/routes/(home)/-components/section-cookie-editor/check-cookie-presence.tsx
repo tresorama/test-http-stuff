@@ -28,7 +28,7 @@ export function CheckCookiePresence() {
 
       // do fetch (with a delay to simulate a real-world situation)
       await sleep(400);
-      const response = await fetch(API_ENDPOINT);
+      const response = await fetch(API_ENDPOINT, { credentials: 'include' });
 
       // validate response
       const json = await response.json();
