@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 import { UIFormField, UIFormFieldHelperText, UIFormLabel, UIInput, UISelect } from "./ui";
+import { CONSTANTS } from "@/constants";
 
-const BACKEND_SERVER_BASE_URL = `http://localhost:9000`;
-const API_ENDPOINT = `${BACKEND_SERVER_BASE_URL}/cookie-editor/set`;
+const API_ENDPOINT = `${CONSTANTS.SERVER_BASE_URL}/cookie-editor/set`;
 
 const FORM_FIELDS = {
   FORM_CHANGE_METHOD: [

@@ -3,9 +3,9 @@ import z from "zod";
 
 import { UIAlert, UIDebugJson } from "./ui";
 import { sleep } from "@/lib/utils/sleep";
+import { CONSTANTS } from "@/constants";
 
-const BACKEND_SERVER_BASE_URL = `http://localhost:9000`;
-const API_ENDPOINT = `${BACKEND_SERVER_BASE_URL}/cookie-editor/check`;
+const API_ENDPOINT = `${CONSTANTS.SERVER_BASE_URL}/cookie-editor/check`;
 
 type Result = (
   | { fetchStatus: 'idle'; }
