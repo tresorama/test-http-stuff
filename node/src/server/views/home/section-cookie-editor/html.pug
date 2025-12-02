@@ -56,6 +56,9 @@ mixin theFormSharedFields
       option(value="none") None
       option(value="lax") Lax
       option(value="strict") Strict
+  div.form-field
+    label(for="secure") secure
+    input(type="checkbox", name="secure", id="secure")
 
 mixin injectStyleAndScript()
   <style> 

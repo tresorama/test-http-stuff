@@ -64,6 +64,11 @@ export function FormDocument() {
           <UISelect name="sameSite" id="sameSite" options={FORM_FIELDS.SAME_SITE_OPTIONS} />
         </UIFormField>
 
+        <UIFormField>
+          <UIFormLabel htmlFor="secure">secure</UIFormLabel>
+          <UIInput name="secure" id="secure" type="checkbox" />
+        </UIFormField>
+
         <button type="submit">
           Set Cookie (Document)
         </button>
