@@ -109,7 +109,7 @@ function setCookieBasedOnRequestData(res: Response, bodyData: z.infer<typeof sch
     maxAge: 15 * 60 * 1000, // 15 minutes
     httpOnly: bodyData.httpOnly ?? undefined,
     sameSite: bodyData.sameSite ?? undefined,
-    domain: bodyData.domain ?? new URL(SERVER_BASE_URL).hostname,
+    domain: bodyData.domain ?? new URL('', SERVER_BASE_URL).hostname,
   };
 
   res.cookie(cookieData.name, cookieData.value, cookieData);
