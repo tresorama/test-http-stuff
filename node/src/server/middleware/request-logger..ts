@@ -9,6 +9,7 @@ export const middlewareRequestLogger: RequestHandler = (req, res, next) => {
   const requestId = Math.random().toString(36).slice(2, 9);
 
   const originalResEnd = res.end;
+  // @ts-expect-error
   res.end = function (chunk, encoding, callback) {
     logEverything(req, res, requestId, responseStartTime);
     return originalResEnd.call(res, chunk, encoding, callback);
