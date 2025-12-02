@@ -3,6 +3,10 @@ import z from "zod";
 
 import type { AddRoutesFn } from "@/server/types/add-route";
 import type { CookieData } from "@/server/types/cookie";
+import { CONSTANTS } from '@/constants';
+
+const { SERVER_BASE_URL } = CONSTANTS;
+
 
 export const sectionCookieEditor_addRoutes: AddRoutesFn = ({ app }) => {
 
@@ -105,7 +109,7 @@ function setCookieBasedOnRequestData(res: Response, bodyData: z.infer<typeof sch
     maxAge: 15 * 60 * 1000, // 15 minutes
     httpOnly: bodyData.httpOnly ?? undefined,
     sameSite: bodyData.sameSite ?? undefined,
-    domain: bodyData.domain ?? undefined,
+    domain: bodyData.domain ?? new URL(SERVER_BASE_URL).hostname,
   };
 
   res.cookie(cookieData.name, cookieData.value, cookieData);
