@@ -54,12 +54,15 @@ export function FormFetch() {
         for (const [key, value] of formData) {
           url.searchParams.set(key, value.toString());
         }
-        fetchPromise = fetch(url.toString());
+        fetchPromise = fetch(url.toString(), {
+          credentials: 'include',
+        });
       }
       else {
         fetchPromise = fetch(API_ENDPOINT, {
           method: 'POST',
           body: formData,
+          credentials: 'include',
         });
       }
       const response = await fetchPromise;
