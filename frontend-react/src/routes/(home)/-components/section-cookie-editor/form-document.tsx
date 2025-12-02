@@ -69,6 +69,11 @@ export function FormDocument() {
           <UIInput name="secure" id="secure" type="checkbox" />
         </UIFormField>
 
+        <UIFormField>
+          <UIFormLabel htmlFor="partitioned">partitioned</UIFormLabel>
+          <UIInput name="partitioned" id="partitioned" type="checkbox" />
+        </UIFormField>
+
         <button type="submit">
           Set Cookie (Document)
         </button>
