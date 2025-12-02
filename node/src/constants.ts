@@ -1,5 +1,9 @@
 import z from "zod";
 
+// 1. get process env
+const PROCESS_ENV = process.env;
+
+// 2. parse env vars
 const schemaEmptyStringToUndefined = z
   .string()
   .optional()
@@ -18,8 +22,10 @@ const ENV_VARS = z.object({
   // app
   PORT: z.coerce.number(),
   SERVER_BASE_URL: z.string().min(1).startsWith("http"),
-}).parse(process.env);
+}).parse(PROCESS_ENV);
 
+
+// 3. build constants
 export const CONSTANTS = {
   // env
   IS_DEVELOPMENT: ENV_VARS.NODE_ENV === "development",
@@ -31,9 +37,11 @@ export const CONSTANTS = {
   SERVER_BASE_URL: ENV_VARS.SERVER_BASE_URL,
 };
 
-if (CONSTANTS.IS_DEVELOPMENT) {
-  console.log({
-    ENV_VARS,
-    CONSTANTS,
-  });
-}
+// 4. log once
+// if (CONSTANTS.IS_DEVELOPMENT) {
+console.log({
+  PROCESS_ENV,
+  ENV_VARS,
+  CONSTANTS,
+});
+// }
