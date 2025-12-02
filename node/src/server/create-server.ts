@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 import express from "express";
 import cookieParser from 'cookie-parser';
 import multer from 'multer';
+import cors from 'cors';
 
 import { homePage_addRoutes } from './views/home/routes';
 
@@ -46,12 +47,15 @@ export async function createServer(options: CreateApiServerOptions) {
   expressApp.use(multer().any());
   apiLogger.info('Adding request components parser... ✅');
 
-  // 2. mount endpoints
+  // 3. Add cors
+  expressApp.use(cors());
+
+  // 4. mount endpoints
   apiLogger.info('Mount routes...');
   addEndpoints({ app: expressApp, logger: apiLogger });
   apiLogger.info('Mount routes... ✅');
 
-  // 3. launch server
+  // 5. launch server
   apiLogger.info('Launching server...');
   expressApp.listen(options.port, () => {
     apiLogger.info(`Server "${options.name}" running on ${options.baseUrl}`);
