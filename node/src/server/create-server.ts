@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import multer from 'multer';
 import cors from 'cors';
 
+import { middlewareRequestLogger } from './middleware/request-logger.';
 import { homePage_addRoutes } from './views/home/routes';
 
 import { createLogger } from "@/utils/logger";
@@ -47,8 +48,13 @@ export async function createServer(options: CreateApiServerOptions) {
   expressApp.use(multer().any());
   apiLogger.info('Adding request components parser... ✅');
 
-  // 3. Add cors
+  // 3. Add middlewares
+  apiLogger.info('Adding middlewares...');
+  // cors
   expressApp.use(cors());
+  // request logger
+  expressApp.use(middlewareRequestLogger);
+  apiLogger.info('Adding middlewares... ✅');
 
   // 4. mount endpoints
   apiLogger.info('Mount routes...');
