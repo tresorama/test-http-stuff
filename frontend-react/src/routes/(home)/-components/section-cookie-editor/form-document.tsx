@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { UIFormField, UIFormFieldHelperText, UIFormLabel, UIInput, UISelect } from "./ui";
+import { UIFormField, UIFormFieldHelperText, UIFormLabel, UIInput, UISelect } from "@/components/mine/ui/form";
 import { CONSTANTS } from "@/constants";
 
 const API_ENDPOINT = `${CONSTANTS.SERVER_BASE_URL}/cookie-editor/set`;

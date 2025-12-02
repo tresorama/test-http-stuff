@@ -2,7 +2,7 @@ import { CheckCookiePresence } from "./check-cookie-presence";
 import { FormDocument } from "./form-document";
 import { FormFetch } from "./form-fetch";
 
-import { UICard, UICardContent, UICardContentBlock, UICardContentBlockTitle, UICardTitle } from "./ui";
+import { UICard, UICardContent, UICardContentBlock, UICardContentBlockTitle, UICardTitle } from "@/components/mine/ui/card";
 
 export function SectionCookieEditor() {
   return (

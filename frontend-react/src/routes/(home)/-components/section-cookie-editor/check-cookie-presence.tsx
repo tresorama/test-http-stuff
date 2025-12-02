@@ -1,7 +1,9 @@
 import { useState } from "react";
 import z from "zod";
 
-import { UIAlert, UIDebugJson } from "./ui";
+import { UIAlert } from "@/components/mine/ui/alert";
+import { UIDebugJson } from "@/components/mine/ui/debug-json";
+
 import { sleep } from "@/lib/utils/sleep";
 import { CONSTANTS } from "@/constants";
 

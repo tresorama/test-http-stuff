@@ -1,9 +1,11 @@
 import { useState } from "react";
 import z from "zod";
 
-import { UIAlert, UIDebugJson, UIFormField, UIFormFieldHelperText, UIFormLabel, UIInput, UISelect } from "./ui";
-import { sleep } from "@/lib/utils/sleep";
 import { CONSTANTS } from "@/constants";
+import { UIFormField, UIFormFieldHelperText, UIFormLabel, UIInput, UISelect } from "@/components/mine/ui/form";
+import { UIAlert } from "@/components/mine/ui/alert";
+import { UIDebugJson } from "@/components/mine/ui/debug-json";
+import { sleep } from "@/lib/utils/sleep";
 
 const API_ENDPOINT = `${CONSTANTS.SERVER_BASE_URL}/cookie-editor/set`;
 
