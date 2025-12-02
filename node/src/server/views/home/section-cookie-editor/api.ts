@@ -3,10 +3,6 @@ import z from "zod";
 
 import type { AddRoutesFn } from "@/server/types/add-route";
 import type { CookieData } from "@/server/types/cookie";
-import { CONSTANTS } from '@/constants';
-
-const { SERVER_BASE_URL } = CONSTANTS;
-
 
 export const sectionCookieEditor_addRoutes: AddRoutesFn = ({ app }) => {
 
@@ -106,31 +102,19 @@ const schemaSetInput = z.object({
 
 function setCookieBasedOnRequestData(res: Response, bodyData: z.infer<typeof schemaSetInput>) {
 
-  const COOKIE_DEBUG_VALUES = {
-    serverBaseURL: SERVER_BASE_URL,
-    fallback: {
-      domain: SERVER_BASE_URL.startsWith('http')
-        ? new URL('', SERVER_BASE_URL).hostname
-        : SERVER_BASE_URL
-    }
-  };
-
   const cookieData: CookieData = {
     name: bodyData.name,
     value: 'FIXED_VALUE',
     maxAge: 15 * 60 * 1000, // 15 minutes
     httpOnly: bodyData.httpOnly ?? undefined,
     sameSite: bodyData.sameSite ?? undefined,
-    domain: bodyData.domain ?? COOKIE_DEBUG_VALUES.fallback.domain,
+    domain: bodyData.domain ?? undefined,
     secure: bodyData.secure ?? false,
     partitioned: bodyData.partitioned ?? false,
   };
 
   res.cookie(cookieData.name, cookieData.value, cookieData);
 
-  return {
-    COOKIE_DEBUG_VALUES,
-    cookieData,
-  };
+  return cookieData;
 
 }
