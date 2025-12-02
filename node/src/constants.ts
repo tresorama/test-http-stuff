@@ -17,7 +17,7 @@ const ENV_VARS = z.object({
   ),
   // app
   PORT: z.coerce.number(),
-  SERVER_BASE_URL: z.string().min(1),
+  SERVER_BASE_URL: z.string().min(1).startsWith("http"),
 }).parse(process.env);
 
 export const CONSTANTS = {
