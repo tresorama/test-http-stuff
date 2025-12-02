@@ -19,7 +19,7 @@ const mainLogger = createLogger('main');
 async function run() {
   await createServer({
     name: 'api',
-    baseUrl: `http://localhost:${CONSTANTS.PORT}`,
+    baseUrl: CONSTANTS.SERVER_BASE_URL,
     port: CONSTANTS.PORT,
   });
 }
