@@ -4,21 +4,11 @@ import z from "zod";
 const PROCESS_ENV = process.env;
 
 // 2. parse env vars
-const schemaEmptyStringToUndefined = z
-  .string()
-  .optional()
-  .transform(v => {
-    if (v === "") return undefined;
-    return v;
-  });
-
 const ENV_VARS = z.object({
   // env
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   // logging
-  MIN_LOG_LEVEL: schemaEmptyStringToUndefined.pipe(
-    z.enum(["error", "info", "debug"]).default("info")
-  ),
+  MIN_LOG_LEVEL: z.enum(["error", "info", "debug"]),
   // app
   PORT: z.coerce.number(),
   SERVER_BASE_URL: z.string().min(1).startsWith("http"),
