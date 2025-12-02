@@ -35,14 +35,16 @@ function extractRequestData(req: Request) {
       path_with_query: req.originalUrl,
       query: req.query,
     },
-    cookies_parsed: req.headers.cookie?.split('; ').reduce(
-      (acc, cookieRaw) => {
-        const [name, value] = cookieRaw.split('=');
-        acc[name] = value;
-        return acc;
-      },
-      {} as Record<string, string>
-    ),
+    cookies_parsed: !req.headers.cookie
+      ? 'No cookies received'
+      : req.headers.cookie.split('; ').reduce(
+        (acc, cookieRaw) => {
+          const [name, value] = cookieRaw.split('=');
+          acc[name] = value;
+          return acc;
+        },
+        {} as Record<string, string>
+      ),
     // cookies_raw: req.headers.cookie,
     // headers: req.headers,
   };
