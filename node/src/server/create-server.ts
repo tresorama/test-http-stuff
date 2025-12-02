@@ -53,10 +53,13 @@ export async function createServer(options: CreateApiServerOptions) {
   apiLogger.info('Adding middlewares...');
   // cors
   expressApp.use(cors({
+    // set Access-Control-Allow-Origin to array of origins
     origin: [
       CONSTANTS.SERVER_BASE_URL,
       ...CONSTANTS.SERVER_CORS_ALLOWED_CLIENTS_ORIGINS,
-    ]
+    ],
+    // set Access-Control-Allow-Credentials to true
+    credentials: true,
   }));
   // request logger
   expressApp.use(middlewareRequestLogger);
