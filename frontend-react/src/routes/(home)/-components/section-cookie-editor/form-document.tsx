@@ -46,7 +46,7 @@ export function FormDocument() {
 
         <UIFormField>
           <UIFormLabel htmlFor="name">name *</UIFormLabel>
-          <UIInput name="name" id="name" />
+          <UIInput name="name" id="name" autoComplete="on" />
         </UIFormField>
 
         <UIFormField>
