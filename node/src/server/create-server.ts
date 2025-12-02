@@ -8,6 +8,7 @@ import cors from 'cors';
 import { middlewareRequestLogger } from './middleware/request-logger.';
 import { homePage_addRoutes } from './views/home/routes';
 
+import { CONSTANTS } from '@/constants';
 import { createLogger } from "@/utils/logger";
 import type { AddRoutesFn } from './types/add-route';
 
@@ -51,7 +52,12 @@ export async function createServer(options: CreateApiServerOptions) {
   // 3. Add middlewares
   apiLogger.info('Adding middlewares...');
   // cors
-  expressApp.use(cors());
+  expressApp.use(cors({
+    origin: [
+      CONSTANTS.SERVER_BASE_URL,
+      ...CONSTANTS.SERVER_CORS_ALLOWED_CLIENTS_ORIGINS,
+    ]
+  }));
   // request logger
   expressApp.use(middlewareRequestLogger);
   apiLogger.info('Adding middlewares... ✅');
